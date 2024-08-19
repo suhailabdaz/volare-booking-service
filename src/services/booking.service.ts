@@ -12,13 +12,42 @@ export class BookingService implements IBookingInterface {
     this.repository = repository;
   }
  
-  async getAllBookings() {
+  
+
+  async initiateBooking(data:Booking) {
     try {
-      const users = await this.repository.getAllBookings();
-      return { success: true, users: users };
+
+      const booking = await this.repository.initiateBooking(data);
+      return booking
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Error resending OTP: ${error.message}`);
+        throw new Error(`Error initiate booking: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async getBooking(data:string) {
+    try {
+
+      const booking = await this.repository.findById(data);
+      return booking
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error getting booking: ${error.message}`);
+      }
+      throw error;
+    }
+  }
+
+  async updateBooking(data:{bookingId:string,travellers:Array<any>}) {
+    try {
+
+      const booking = await this.repository.addTraveller(data.bookingId,data.travellers);
+      return booking
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(`Error getting booking: ${error.message}`);
       }
       throw error;
     }

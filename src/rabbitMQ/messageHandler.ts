@@ -18,11 +18,17 @@ export default class MessageHandler {
     console.log('The operation in booking service is', operation, data);
 
     switch (operation) {
-      case 'get-bookings':
-        response = await controller.getAllBookings.bind(controller)();
+      case 'initiate-booking':
+        response = await controller.initiateBooking.bind(controller)(data);
+        break;
+      case 'get-booking':
+        response = await controller.getBooking.bind(controller)(data);
+        break;
+      case 'update-booking':
+        response = await controller.updateBooking.bind(controller)(data);
         break;
       default:
-        response ='Request-key notfound';
+        response = 'Request-key notfound';
         break;
     }
     await rabbitClient.produce(response, correlationId, replyTo);

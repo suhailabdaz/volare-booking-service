@@ -3,6 +3,7 @@ import { Booking } from "../model/booking.entities";
 
 
 export interface IBookingRepository {
-  getAllBookings(): Promise<IBooking[]|IBooking | null>;
-   
+  initiateBooking(data:Booking):Promise<IBooking | null>;
+  findById(id:string):Promise<IBooking | null>;
+  addTraveller(id:string,travellers:Array<any>):Promise<IBooking | null>;
 }
