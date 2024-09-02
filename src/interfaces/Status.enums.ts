@@ -3,5 +3,6 @@ export enum BookingStatus {
   confirmed = 'confirmed',
   Cancelled = 'cancelled',
   addedTraveller = 'traveller',
-  addedSeatBooking = 'seats'
+  addedSeatBooking = 'seats',
+  expired='expired',
 }

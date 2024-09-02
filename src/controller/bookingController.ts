@@ -37,4 +37,22 @@ export class BookingController {
       console.log(e);
     }
   };
+
+  updateSeatBooking = async (data:{bookingId:string,seats:Array<any>}) => {
+    try {
+      const response = await this.service.updateSeatBooking(data);
+      return response;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  checkoutSession = async (data:{bookingId:string}) => {
+    try {
+      const response = await this.service.checkoutSession(data);
+      return response;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
 }

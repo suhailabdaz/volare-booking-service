@@ -3,7 +3,7 @@ export class Booking {
     public readonly userId: string,
     public readonly flightChartId: string,
     public readonly fareType: string,
-    public readonly travellers: string[],
+    public readonly travellers: Array<{}>,
     public readonly travelClass: string,
     public readonly seats: {
       seatNumber: string;
@@ -23,6 +23,7 @@ export class Booking {
     },
     public status: 'pending' | 'confirmed' | 'cancelled',
     public paymentStatus: 'pending' | 'completed' | 'failed',
+    public departureTime: Date ,
     public readonly _id?: string,
     public paymentId?: string,
     public readonly createdAt?: Date,

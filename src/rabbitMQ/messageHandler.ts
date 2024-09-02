@@ -27,8 +27,17 @@ export default class MessageHandler {
       case 'update-booking':
         response = await controller.updateBooking.bind(controller)(data);
         break;
+      case 'update-seats':
+        response = await controller.updateSeatBooking.bind(controller)(data);
+        break;
+      case 'checkout-session':
+        response = await controller.checkoutSession.bind(controller)(data);
+        break;
+      case 'ticket-confirmation':
+        response = await controller.checkoutSession.bind(controller)(data);
+        break;
       default:
-        response = 'Request-key notfound';
+        response = 'Request-key not found';
         break;
     }
     await rabbitClient.produce(response, correlationId, replyTo);

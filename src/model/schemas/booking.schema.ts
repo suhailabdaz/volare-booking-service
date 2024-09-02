@@ -3,12 +3,12 @@ import mongoose, { Document, Model, Schema } from 'mongoose';
 export interface IBooking extends Document {
   userId: mongoose.Schema.Types.ObjectId;
   flightChartId: mongoose.Schema.Types.ObjectId;
-  travellers:[];
+  travellers:Array<{}>;
   travelClass: string;
   seats: {
     seatNumber: string;
-    travellerId: mongoose.Schema.Types.ObjectId;
-    class: 'economy' | 'business' | 'firstClass';
+    travellerId: string;
+    class: 'economyClass' | 'businessClass' | 'firstClass';
   }[];
   totalPrice: number;
   travellerType: {
@@ -22,20 +22,20 @@ export interface IBooking extends Document {
     chargesAmount: number;
   };
   fareType: string;
-  status: 'pending' | 'confirmed' | 'cancelled';
+  status: 'pending' | 'confirmed' | 'cancelled'|'traveller'|'seats'|'expired';
   paymentStatus: 'pending' | 'completed' | 'failed';
   paymentId?: string;
+  departureTime: Date; 
+
 }
 
 const bookingSchema: Schema<IBooking> = new mongoose.Schema({
   userId: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
     required: true
   },
   flightChartId: {
     type: Schema.Types.ObjectId,
-    ref: 'FlightCharts',
     required: true
   },
   fareType:{
@@ -46,11 +46,14 @@ const bookingSchema: Schema<IBooking> = new mongoose.Schema({
     type: String,
     required: true
   },
+  departureTime: {
+    type: Date,
+    required: true
+  },
   seats: [{
     seatNumber: String,
     travellerId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Traveller'
+      type: String,
     },
     class: {
       type: String,
@@ -85,6 +88,23 @@ const bookingSchema: Schema<IBooking> = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+bookingSchema.statics.updateExpiredBookings = async function() {
+  const currentTime = new Date();
+  await this.updateMany(
+    { 
+      departureTime: { $lt: currentTime },
+      status: { $in: ['pending', 'confirmed', 'traveller', 'seats'] }
+    },
+    { $set: { status: 'expired' } }
+  );
+};
+
+
+bookingSchema.pre(['find', 'findOne'], async function() {
+  await (this.model as any).updateExpiredBookings();
+});
+
 
 const BookingModel: Model<IBooking> = mongoose.model('Bookings', bookingSchema);
 export default BookingModel;
