@@ -7,4 +7,5 @@ export interface IBookingRepository {
   findById(id:string):Promise<IBooking | null>;
   addTraveller(id:string,travellers:Array<any>):Promise<IBooking | null>;
   seatSelection(id:string,travellers:Array<any>):Promise<IBooking | null>;
+  paymentCompleted(bookingId:string,paymentId:string):Promise<IBooking | null>;
 }

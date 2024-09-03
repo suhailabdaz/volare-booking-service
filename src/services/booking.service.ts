@@ -126,6 +126,16 @@ export class BookingService implements IBookingInterface {
     }
   }
 
+  async ticketConfirmation(data:{bookingId:string,paymentId:string}) {
+      try{
+        const booking = await this.repository.paymentCompleted(data.bookingId,data.paymentId)
+        return booking
+      }catch (error) {
+      console.error('Error confiming ticket', error);
+      throw error;
+    }
+  }
+
 
 //  async  generateTicketPDF(bookingId: string): Promise<Buffer> {
 //   const booking = await getBookingDetails(bookingId);

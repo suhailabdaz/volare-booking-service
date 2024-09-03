@@ -57,7 +57,7 @@ const bookingSchema: Schema<IBooking> = new mongoose.Schema({
     },
     class: {
       type: String,
-      enum: ['economy', 'business', 'firstClass']
+      enum: ['economyClass', 'businessClass', 'firstClass']
     }
   }],
   totalPrice: {

@@ -73,4 +73,15 @@ async seatSelection(id: string, seats: Array<any>): Promise<IBooking | null> {
     }
 }
 
+async  paymentCompleted(bookingId: string,paymentId:string): Promise<IBooking | null> {
+  const booking = await BookingModel.findById(bookingId);
+  if (booking) {
+      booking.paymentStatus = 'completed';
+      booking.status= 'confirmed';
+      booking.paymentId=paymentId;
+      await booking.save();
+  }
+  return booking;
+}
+
 }

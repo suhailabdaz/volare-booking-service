@@ -7,4 +7,5 @@ export interface IBookingInterface {
   updateBooking(data:{bookingId:string,travellers:Array<any>}):any
   updateSeatBooking(data:{bookingId:string,seats:Array<any>}):any
   checkoutSession(data:{bookingId:string}):any
+  ticketConfirmation(data:{bookingId:string,paymentId:string}):any
 }

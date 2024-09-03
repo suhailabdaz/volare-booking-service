@@ -8,10 +8,8 @@ export class BookingController {
     this.service = service;
   }
 
-  
-  initiateBooking = async (data:Booking) => {
+  initiateBooking = async (data: Booking) => {
     try {
-      
       const response = await this.service.initiateBooking(data);
       return response;
     } catch (e: any) {
@@ -19,9 +17,8 @@ export class BookingController {
     }
   };
 
-  getBooking = async (data:string) => {
+  getBooking = async (data: string) => {
     try {
-      
       const response = await this.service.getBooking(data);
       return response;
     } catch (e: any) {
@@ -29,7 +26,10 @@ export class BookingController {
     }
   };
 
-  updateBooking = async (data:{bookingId:string,travellers:Array<any>}) => {
+  updateBooking = async (data: {
+    bookingId: string;
+    travellers: Array<any>;
+  }) => {
     try {
       const response = await this.service.updateBooking(data);
       return response;
@@ -38,7 +38,10 @@ export class BookingController {
     }
   };
 
-  updateSeatBooking = async (data:{bookingId:string,seats:Array<any>}) => {
+  updateSeatBooking = async (data: {
+    bookingId: string;
+    seats: Array<any>;
+  }) => {
     try {
       const response = await this.service.updateSeatBooking(data);
       return response;
@@ -47,9 +50,18 @@ export class BookingController {
     }
   };
 
-  checkoutSession = async (data:{bookingId:string}) => {
+  checkoutSession = async (data: { bookingId: string }) => {
     try {
       const response = await this.service.checkoutSession(data);
+      return response;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  ticketConfirmation = async (data:{bookingId:string,paymentId:string}) => {
+    try {
+      const response = await this.service.ticketConfirmation(data);
       return response;
     } catch (e: any) {
       console.log(e);

@@ -34,7 +34,7 @@ export default class MessageHandler {
         response = await controller.checkoutSession.bind(controller)(data);
         break;
       case 'ticket-confirmation':
-        response = await controller.checkoutSession.bind(controller)(data);
+        response = await controller.ticketConfirmation.bind(controller)(data);
         break;
       default:
         response = 'Request-key not found';
