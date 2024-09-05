@@ -1,5 +1,6 @@
-import { IBookingInterface } from '../interfaces/iBookingInterface';
+import { contactDetails, IBookingInterface } from '../interfaces/iBookingInterface';
 import { Booking } from '../model/booking.entities';
+import { Coupon } from '../model/coupon.entities';
 
 export class BookingController {
   private service: IBookingInterface;
@@ -29,6 +30,7 @@ export class BookingController {
   updateBooking = async (data: {
     bookingId: string;
     travellers: Array<any>;
+    contactDetails:contactDetails
   }) => {
     try {
       const response = await this.service.updateBooking(data);
@@ -62,6 +64,15 @@ export class BookingController {
   ticketConfirmation = async (data:{bookingId:string,paymentId:string}) => {
     try {
       const response = await this.service.ticketConfirmation(data);
+      return response;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
+  applyCoupon = async (data:{bookingId:string,coupon:Coupon}) => {
+    try {
+      const response = await this.service.applyCoupon(data);
       return response;
     } catch (e: any) {
       console.log(e);

@@ -5,7 +5,6 @@ export default {
       url: String(process.env.RABBITMQ_LINK),
       queues: {
         bookingQueue: "booking_queue",
-        
       },
     },
   };

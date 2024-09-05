@@ -1,9 +1,10 @@
-import { IBookingInterface } from '../interfaces/iBookingInterface';
+import { contactDetails, IBookingInterface } from '../interfaces/iBookingInterface';
 import { IBookingRepository } from '../interfaces/iBookingRepository';
 import { Booking } from '../model/booking.entities';
 import 'dotenv/config';
 import Stripe from 'stripe';
 import PDFDocument from 'pdfkit';
+import { Coupon } from '../model/coupon.entities';
 
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -47,10 +48,10 @@ export class BookingService implements IBookingInterface {
     }
   }
 
-  async updateBooking(data:{bookingId:string,travellers:Array<any>}) {
+  async updateBooking(data:{bookingId:string,travellers:Array<any>,contactDetails:contactDetails}) {
     try {
 
-      const booking = await this.repository.addTraveller(data.bookingId,data.travellers);
+      const booking = await this.repository.addTraveller(data.bookingId,data.travellers,data.contactDetails);
       return booking
     } catch (error) {
       if (error instanceof Error) {
@@ -135,6 +136,22 @@ export class BookingService implements IBookingInterface {
       throw error;
     }
   }
+
+
+  async applyCoupon(data:{bookingId:string,coupon:Coupon}) {
+    try{
+      if(data.coupon == null){
+        const booking = await this.repository.findById(data.bookingId)
+        return booking
+      }else{
+      const booking = await this.repository.applyCoupon(data.bookingId,data.coupon) 
+      return booking
+      }
+    }catch (error) {
+    console.error('Error confiming ticket', error);
+    throw error;
+  }
+}
 
 
 //  async  generateTicketPDF(bookingId: string): Promise<Buffer> {

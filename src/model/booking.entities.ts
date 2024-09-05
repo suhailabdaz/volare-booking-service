@@ -8,7 +8,7 @@ export class Booking {
     public readonly seats: {
       seatNumber: string;
       travellerId: string;
-      class: 'economy' | 'business' | 'firstClass';
+      class: 'economyClass' | 'businessClass' | 'firstClass';
     }[],
     public readonly totalPrice: number,
     public readonly travellerType: {
@@ -20,12 +20,18 @@ export class Booking {
       baseFare: number;
       taxAmount: number;
       chargesAmount: number;
+      couponDiscount: number;
     },
-    public status: 'pending' | 'confirmed' | 'cancelled',
+    public status: 'pending' | 'confirmed' | 'cancelled' | 'traveller' | 'seats' | 'expired',
     public paymentStatus: 'pending' | 'completed' | 'failed',
-    public departureTime: Date ,
+    public departureTime: Date,
+    public readonly contactDetails: {
+      phone: string;
+      email: string;
+    },
     public readonly _id?: string,
     public paymentId?: string,
+    public readonly couponCode?: string,
     public readonly createdAt?: Date,
     public readonly updatedAt?: Date
   ) {}

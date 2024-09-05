@@ -20,12 +20,18 @@ export interface IBooking extends Document {
     baseFare: number;
     taxAmount: number;
     chargesAmount: number;
+    couponDiscount:Number;
   };
   fareType: string;
   status: 'pending' | 'confirmed' | 'cancelled'|'traveller'|'seats'|'expired';
   paymentStatus: 'pending' | 'completed' | 'failed';
   paymentId?: string;
   departureTime: Date; 
+  couponCode?: string  ;
+  contactDetails?: {
+    phone: string;
+    email: string;
+  };
 
 }
 
@@ -41,6 +47,7 @@ const bookingSchema: Schema<IBooking> = new mongoose.Schema({
   fareType:{
     type:String
   },
+
   travellers: [],
   travelClass: {
     type: String,
@@ -72,11 +79,12 @@ const bookingSchema: Schema<IBooking> = new mongoose.Schema({
   fareBreakdown: {
     baseFare: { type: Number, required: true },
     taxAmount: { type: Number, required: true },
-    chargesAmount: { type: Number, required: true }
+    chargesAmount: { type: Number, required: true },
+    couponDiscount: { type: Number, default: 0 },
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'cancelled'],
+    enum: ['pending', 'confirmed', 'cancelled','traveller','seats','expired'],
     default: 'pending'
   },
   paymentStatus: {
@@ -84,7 +92,13 @@ const bookingSchema: Schema<IBooking> = new mongoose.Schema({
     enum: ['pending', 'completed', 'failed'],
     default: 'pending'
   },
-  paymentId: String
+  paymentId: String,
+  couponCode: { type: String } ,
+  contactDetails: {
+    phone: { type: String, required: false },
+    email: { type: String, required: false }
+  },
+
 }, {
   timestamps: true
 });
