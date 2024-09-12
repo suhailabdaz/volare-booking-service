@@ -5,6 +5,8 @@ import 'dotenv/config';
 import Stripe from 'stripe';
 import PDFDocument from 'pdfkit';
 import { Coupon } from '../model/coupon.entities';
+import {PDFService}  from '../utils/pdfGeneration';
+import  {sendTicketEmail}  from '../utils/sendMail';
 
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -50,8 +52,9 @@ export class BookingService implements IBookingInterface {
 
   async updateBooking(data:{bookingId:string,travellers:Array<any>,contactDetails:contactDetails}) {
     try {
-
       const booking = await this.repository.addTraveller(data.bookingId,data.travellers,data.contactDetails);
+      console.log(booking,'applycoupon');
+      
       return booking
     } catch (error) {
       if (error instanceof Error) {
@@ -63,8 +66,8 @@ export class BookingService implements IBookingInterface {
 
   async updateSeatBooking(data:{bookingId:string,seats:Array<any>}) {
     try {
-
       const booking = await this.repository.seatSelection(data.bookingId,data.seats);
+      console.log(booking,'updateSeating');
       return booking
     } catch (error) {
       if (error instanceof Error) {
@@ -72,12 +75,12 @@ export class BookingService implements IBookingInterface {
       }
       throw error;
     }
+
   }
 
   async checkoutSession(data: { bookingId: string }) {
     try {
-      const booking = await this.repository.findById(data.bookingId);
-      
+      const booking = await this.repository.findById(data.bookingId);      
       if (booking) {
         const encodedSeats = this.encodeSeatInfo(booking.seats);
         const line_items = [
@@ -110,7 +113,7 @@ export class BookingService implements IBookingInterface {
           line_items: line_items,
           mode: 'payment',
           success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}&booking_id=${booking._id?.toString()}&flightchart_id=${booking.flightChartId?.toString()}&seats=${encodedSeats}`,
-          cancel_url: 'http://localhost:3000/cancel', 
+          cancel_url: 'http://localhost:3000/cancel',
           metadata: {
             flightChartId:booking.flightChartId?.toString(),
             bookingId: booking._id?.toString(),
@@ -129,8 +132,25 @@ export class BookingService implements IBookingInterface {
 
   async ticketConfirmation(data:{bookingId:string,paymentId:string}) {
       try{
-        const booking = await this.repository.paymentCompleted(data.bookingId,data.paymentId)
-        return booking
+      const booking = await this.repository.paymentCompleted(data.bookingId,data.paymentId)
+
+
+      const pdfService = new PDFService();
+
+
+      if(booking){
+      const pdfBuffer = await pdfService.generateTicketPDF(booking);
+      const bookingDetails = {
+        bookingReference: booking._id as string,
+        passengerName:  'Valued Customer',
+        departureDate: new Date(booking.departureTime).toLocaleDateString(),
+        origin:  'Origin City',
+        destination:  'Destination City'
+      };
+      
+      await sendTicketEmail(booking?.contactDetails?.email || 'suhail.abdaz@gmail.com', pdfBuffer, bookingDetails);
+    }
+      return booking
       }catch (error) {
       console.error('Error confiming ticket', error);
       throw error;
