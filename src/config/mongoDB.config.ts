@@ -5,7 +5,7 @@ import "dotenv/config";
 const connectDB = async () => {
     try {
       const conn = await mongoose.connect(
-        `${process.env.MONGO_URI}${process.env.MONGODB_NAME}`
+        `${process.env.BOOKING_MONGO_URI}${process.env.BOOKING_MONGODB_NAME}`
       );    
       console.log(`BookingDB-connected: ${conn.connection.host}`);
     } catch (error: any) {
