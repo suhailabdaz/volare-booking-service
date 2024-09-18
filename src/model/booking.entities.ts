@@ -21,6 +21,7 @@ export class Booking {
       taxAmount: number;
       chargesAmount: number;
       couponDiscount: number;
+      extraCharges:number;
     },
     public status: 'pending' | 'confirmed' | 'cancelled' | 'traveller' | 'seats' | 'expired',
     public paymentStatus: 'pending' | 'completed' | 'failed',

@@ -144,8 +144,7 @@ export class BookingService implements IBookingInterface {
         bookingReference: booking._id as string,
         passengerName:  'Valued Customer',
         departureDate: new Date(booking.departureTime).toLocaleDateString(),
-        origin:  'Origin City',
-        destination:  'Destination City'
+
       };
       
       await sendTicketEmail(booking?.contactDetails?.email || 'suhail.abdaz@gmail.com', pdfBuffer, bookingDetails);
@@ -171,6 +170,18 @@ export class BookingService implements IBookingInterface {
     console.error('Error confiming ticket', error);
     throw error;
   }
+}
+
+
+async getBookingByStatus(data:{id:string,status:string}) {
+  try{
+    const Bookings  =  await this.repository.getBookingByStatus(data.id,data.status)
+    return Bookings
+    }
+  catch (error) {
+  console.error('Error confiming ticket', error);
+  throw error;
+}
 }
 
 

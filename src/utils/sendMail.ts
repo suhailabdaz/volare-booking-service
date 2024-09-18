@@ -19,8 +19,6 @@ interface BookingDetails {
     bookingReference: string;
     passengerName: string;
     departureDate: string;
-    origin: string;
-    destination: string;
 }
 
 export const sendTicketEmail = async (to: string, pdfBuffer: Buffer, bookingDetails: BookingDetails): Promise<void> => {
@@ -32,15 +30,13 @@ export const sendTicketEmail = async (to: string, pdfBuffer: Buffer, bookingDeta
         html: `
         <div style="font-family: Arial, sans-serif; text-align: center;">
             <div style="background-color: #f7f7f7; padding: 20px;">
-                <img src="data:image/png;base64,${logoBase64}" alt="Godspeed Airlines" style="width: 150px; height: auto;">
+                <img src="data:image/png;base64,${logoBase64}" alt="Volare Flights" style="width: 150px; height: auto;">
             </div>
             <div style="padding: 20px;">
                 <h1 style="color: #333;">Your Flight Ticket Confirmation</h1>
-                <p style="font-size: 16px; color: #555;">Dear ${bookingDetails.passengerName},</p>
-                <p style="font-size: 16px; color: #555;">Thank you for choosing Godspeed Airlines. Your flight ticket is attached to this email.</p>
+                <p style="font-size: 16px; color: #555;">Thank you for choosing Volare Flights. Your flight ticket is attached to this email.</p>
                 <p style="font-size: 16px; color: #555;">Booking Reference: <strong>${bookingDetails.bookingReference}</strong></p>
                 <p style="font-size: 16px; color: #555;">Date: ${bookingDetails.departureDate}</p>
-                <p style="font-size: 16px; color: #555;">From: ${bookingDetails.origin} To: ${bookingDetails.destination}</p>
                 <p style="font-size: 16px; color: #555;">Please find your ticket attached to this email. We recommend you keep this for your records.</p>
                 <p style="font-size: 16px; color: #555;">We wish you a pleasant flight!</p>
                 <p style="font-size: 16px; color: #555;">Best regards,</p>

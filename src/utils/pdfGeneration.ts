@@ -1,21 +1,17 @@
 import PDFDocument from 'pdfkit';
-import { IBooking } from '../model/schemas/booking.schema'; // Assume you have a Booking type defined
+import { IBooking } from '../model/schemas/booking.schema';
 import fs from 'fs';
 import path from 'path';
 
-interface Traveller{
-  firstName:string 
-  
+interface Traveller {
+  firstName: string;
+  lastName?: string; // Assuming lastName may also be present
 }
 
 export class PDFService {
-  // private fontRegular: string;
-  // private fontBold: string;
   private logoPath: string;
 
   constructor() {
-    // this.fontRegular = path.join(__dirname, '../assets/fonts/Roboto-Regular.ttf');
-    // this.fontBold = path.join(__dirname, '../assets/fonts/Roboto-Bold.ttf');
     this.logoPath = path.join(__dirname, '../assets/GODSPEED.png');
   }
 
@@ -43,19 +39,17 @@ export class PDFService {
     doc
       .image(this.logoPath, 50, 45, { width: 50 })
       .fillColor('#444444')
-      // .font(this.fontBold)
       .fontSize(20)
-      .text('Your Airline Name', 110, 57)
+      .text('Volare Flights', 110, 57)
       .fontSize(10)
-      .text('123 Main Street', 200, 65, { align: 'right' })
-      .text('New York, NY, 10025', 200, 80, { align: 'right' })
+      .text('123 Bengaluru', 200, 65, { align: 'right' })
+      .text('Bengaluru, KA, 10025', 200, 80, { align: 'right' })
       .moveDown();
   }
 
   private generateCustomerInformation(doc: PDFKit.PDFDocument, booking: IBooking): void {
     doc
       .fillColor('#444444')
-      // .font(this.fontBold)
       .fontSize(20)
       .text('Flight Ticket', 50, 160);
 
@@ -63,20 +57,27 @@ export class PDFService {
 
     const customerInformationTop = 200;
 
+    // Booking Number
     doc
       .fontSize(10)
-      // .font(this.fontBold)
       .text('Booking Number:', 50, customerInformationTop)
-      // .font(this.fontRegular)
-      // .text(booking._id||'', 150, customerInformationTop)
-      // .font(this.fontBold)
+      // .text(booking._id || '', 150, customerInformationTop);
+
+    // Booking Date
+    doc
       .text('Booking Date:', 50, customerInformationTop + 15)
-      // .font(this.fontRegular)
-      // .text(this.formatDate(new Date(booking.createdAt || '')), 150, customerInformationTop + 15)
-      // .font(this.fontBold)
-      .text('Passenger Name:', 50, customerInformationTop + 30)
-      // .font(this.fontRegular)
-      // .text(booking.travellers[0]?.firstName || 'N/A', 150, customerInformationTop + 30)
+      // .text(this.formatDate(new Date(booking.createdAt || '')), 150, customerInformationTop + 15);
+
+    // Passenger Name
+    doc
+      .text('Passenger Name:', 50, customerInformationTop + 30);
+
+    if (booking.travellers.length > 0) {
+      const traveller = booking.travellers[0] as Traveller; // Cast to correct type
+      doc.text(`${traveller.firstName || 'N/A'} ${traveller.lastName || ''}`, 150, customerInformationTop + 30);
+    } else {
+      doc.text('N/A', 150, customerInformationTop + 30);
+    }
 
     this.generateHr(doc, 252);
   }
@@ -84,7 +85,6 @@ export class PDFService {
   private generateTicketTable(doc: PDFKit.PDFDocument, booking: IBooking): void {
     const ticketTableTop = 330;
 
-    // doc.font(this.fontBold);
     this.generateTableRow(
       doc,
       ticketTableTop,
@@ -95,14 +95,13 @@ export class PDFService {
       'Departure'
     );
     this.generateHr(doc, ticketTableTop + 20);
-    // doc.font(this.fontRegular);
 
     this.generateTableRow(
       doc,
       ticketTableTop + 30,
       booking.flightChartId.toString(),
-      'New York',
-      'Los Angeles',
+      'Mattanur', 
+      'Kochi', 
       this.formatDate(new Date(booking.departureTime)),
       new Date(booking.departureTime).toLocaleTimeString()
     );
@@ -111,7 +110,6 @@ export class PDFService {
 
     const pricingTableTop = ticketTableTop + 70;
 
-    // doc.font(this.fontBold);
     this.generateTableRow(
       doc,
       pricingTableTop,
@@ -122,16 +120,15 @@ export class PDFService {
       'Total Price'
     );
     this.generateHr(doc, pricingTableTop + 20);
-    // doc.font(this.fontRegular);
 
     this.generateTableRow(
       doc,
       pricingTableTop + 30,
-      `$${booking.fareBreakdown.baseFare}`,
-      `$${booking.fareBreakdown.taxAmount}`,
-      `$${booking.fareBreakdown.chargesAmount}`,
-      `$${booking.fareBreakdown.couponDiscount}`,
-      `$${booking.totalPrice}`
+      `Rs${booking.fareBreakdown.baseFare.toFixed(2)}`,
+      `Rs${booking.fareBreakdown.taxAmount.toFixed(2)}`,
+      `Rs${booking.fareBreakdown.chargesAmount.toFixed(2)}`,
+      `Rs${booking.fareBreakdown.couponDiscount.toFixed(2)}`,
+      `Rs${booking.totalPrice.toFixed(2)}`
     );
   }
 
@@ -139,7 +136,7 @@ export class PDFService {
     doc
       .fontSize(10)
       .text(
-        'Thank you for choosing our airline. We wish you a pleasant flight!',
+        'Thank you for choosing volare Flights. We wish you a pleasant flight!',
         50,
         700,
         { align: 'center', width: 500 }
@@ -174,8 +171,8 @@ export class PDFService {
   }
 
   private formatDate(date: Date): string {
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;

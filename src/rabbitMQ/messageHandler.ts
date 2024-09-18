@@ -36,9 +36,12 @@ export default class MessageHandler {
       case 'ticket-confirmation':
         response = await controller.ticketConfirmation.bind(controller)(data);
         break;
-        case 'apply-coupon':
-          response = await controller.applyCoupon.bind(controller)(data);
-          break;
+      case 'apply-coupon':
+        response = await controller.applyCoupon.bind(controller)(data);
+        break;
+      case 'get-booking-by-status':
+        response = await controller.getBookingByStatus.bind(controller)(data);
+        break;
       default:
         response = 'Request-key not found';
         break;

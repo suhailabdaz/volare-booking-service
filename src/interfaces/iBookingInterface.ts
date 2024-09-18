@@ -15,4 +15,5 @@ export interface IBookingInterface {
   checkoutSession(data:{bookingId:string}):any
   ticketConfirmation(data:{bookingId:string,paymentId:string}):any
   applyCoupon(data:{bookingId:string,coupon:Coupon|null}):any
+  getBookingByStatus(data:{id:string,status:string}):any
 }

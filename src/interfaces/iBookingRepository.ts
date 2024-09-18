@@ -11,4 +11,5 @@ export interface IBookingRepository {
   seatSelection(id:string,travellers:Array<any>):Promise<IBooking | null>;
   paymentCompleted(bookingId:string,paymentId:string):Promise<IBooking | null>;
   applyCoupon(bookingId:string,coupon:Coupon|null):Promise<IBooking | null>
+  getBookingByStatus(userId:string,status:string):Promise<IBooking | IBooking[] | null>
 }

@@ -70,6 +70,16 @@ export class BookingController {
     }
   };
 
+
+  getBookingByStatus = async (data:{id:string,status:string}) => {
+    try {
+      const response = await this.service.getBookingByStatus(data);
+      return response;
+    } catch (e: any) {
+      console.log(e);
+    }
+  };
+
   applyCoupon = async (data:{bookingId:string,coupon:Coupon}) => {
     try {
       const response = await this.service.applyCoupon(data);

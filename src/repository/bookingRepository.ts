@@ -124,4 +124,38 @@ export class BookingRepository implements IBookingRepository {
       session.endSession();
     }
   }
+
+
+  async getBookingByStatus(userId: string, status: string): Promise<IBooking[]> {
+    try {
+      let query: any = { userId };
+  
+      switch (status) {
+        case 'upcoming':
+          query.status = 'confirmed';
+          break;
+        case 'completed':
+          query.status = 'expired';
+          break;
+        case 'cancelled':
+          query.status = 'cancelled';
+          break;
+        case 'unsuccessful':
+          query.status = { $in: ['pending', 'traveller', 'seats'] };
+          break;
+        default:
+          throw new Error('Invalid status');
+      }
+  
+      const bookings = await BookingModel.find(query);
+      
+      if (!bookings || bookings.length === 0) {
+        return [];
+      }
+      
+      return bookings;
+    } catch (e: any) {
+      throw new Error(e.message || 'Error fetching bookings by status');
+    }
+  }
 }

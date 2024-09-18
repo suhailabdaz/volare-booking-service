@@ -20,7 +20,8 @@ export interface IBooking extends Document {
     baseFare: number;
     taxAmount: number;
     chargesAmount: number;
-    couponDiscount:Number;
+    couponDiscount:number;
+    extraCharges:number
   };
   fareType: string;
   status: 'pending' | 'confirmed' | 'cancelled'|'traveller'|'seats'|'expired';
@@ -81,6 +82,7 @@ const bookingSchema: Schema<IBooking> = new mongoose.Schema({
     taxAmount: { type: Number, required: true },
     chargesAmount: { type: Number, required: true },
     couponDiscount: { type: Number, default: 0 },
+    extraCharges: { type: Number, default: 0 },
   },
   status: {
     type: String,
